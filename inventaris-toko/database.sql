@@ -23,6 +23,7 @@ CREATE TABLE produk (
     harga_beli DECIMAL(12,2) NOT NULL,
     harga_jual DECIMAL(12,2) NOT NULL,
     stok INT DEFAULT 0,
+    path VARCHAR(255) DEFAULT NULL,
     deskripsi TEXT,
     FOREIGN KEY (id_kategori) REFERENCES kategori(id_kategori)
         ON UPDATE CASCADE ON DELETE RESTRICT

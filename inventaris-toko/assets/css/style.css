@@ -478,6 +478,33 @@ table tr:hover td {
     border-top: 1px solid var(--border);
 }
 
+/* Product image */
+.produk-thumb {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: #f1f5f9;
+}
+
+.produk-preview {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-bottom: 0.75rem;
+    background: #f1f5f9;
+}
+
+.form-hint {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
 /* Empty state */
 .empty-state {
     text-align: center;

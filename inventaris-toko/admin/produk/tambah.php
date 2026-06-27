@@ -2,6 +2,7 @@
 $pageTitle = 'Tambah Produk';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../auth/cek_login.php';
+require_once __DIR__ . '/../../includes/upload_produk.php';
 requireAdmin();
 
 $kategori = $pdo->query('SELECT * FROM kategori ORDER BY nama_kategori')->fetchAll();
@@ -21,7 +22,7 @@ require_once __DIR__ . '/../../includes/sidebar.php';
             <?php if (!$kategori): ?>
                 <div class="alert alert-warning">Tambahkan kategori terlebih dahulu sebelum menambah produk.</div>
             <?php else: ?>
-            <form method="POST" action="<?= getBaseUrl() ?>/process/produk/tambah.php">
+            <form method="POST" action="<?= getBaseUrl() ?>/process/produk/tambah.php" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="id_kategori">Kategori</label>
                     <select id="id_kategori" name="id_kategori" class="form-control" required>
@@ -50,6 +51,11 @@ require_once __DIR__ . '/../../includes/sidebar.php';
                 <div class="form-group">
                     <label for="stok">Stok Awal</label>
                     <input type="number" id="stok" name="stok" class="form-control" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="gambar">Gambar Produk</label>
+                    <input type="file" id="gambar" name="gambar" class="form-control" accept="image/jpeg,image/png,image/gif,image/webp" required>
+                    <small class="form-hint">Format: JPG, PNG, GIF, WEBP. Maksimal 2 MB.</small>
                 </div>
                 <div class="form-group">
                     <label for="deskripsi">Deskripsi</label>

@@ -2,6 +2,7 @@
 $pageTitle = 'Edit Produk';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../auth/cek_login.php';
+require_once __DIR__ . '/../../includes/upload_produk.php';
 requireAdmin();
 
 $id = (int) ($_GET['id'] ?? 0);
@@ -29,7 +30,7 @@ require_once __DIR__ . '/../../includes/sidebar.php';
         </div>
 
         <div class="card" style="max-width:600px;">
-            <form method="POST" action="<?= getBaseUrl() ?>/process/produk/edit.php">
+            <form method="POST" action="<?= getBaseUrl() ?>/process/produk/edit.php" enctype="multipart/form-data">
                 <input type="hidden" name="id_produk" value="<?= $produk['id_produk'] ?>">
                 <div class="form-group">
                     <label for="id_kategori">Kategori</label>
@@ -66,6 +67,14 @@ require_once __DIR__ . '/../../includes/sidebar.php';
                     <label for="stok">Stok</label>
                     <input type="number" id="stok" name="stok" class="form-control" min="0"
                            value="<?= $produk['stok'] ?>">
+                </div>
+                <div class="form-group">
+                    <label for="gambar">Gambar Produk</label>
+                    <?php if ($img = produkImageUrl($produk['path'] ?? null)): ?>
+                        <img src="<?= $img ?>" alt="<?= htmlspecialchars($produk['nama_produk']) ?>" class="produk-preview">
+                    <?php endif; ?>
+                    <input type="file" id="gambar" name="gambar" class="form-control" accept="image/jpeg,image/png,image/gif,image/webp">
+                    <small class="form-hint">Kosongkan jika tidak ingin mengganti gambar. Maksimal 2 MB.</small>
                 </div>
                 <div class="form-group">
                     <label for="deskripsi">Deskripsi</label>

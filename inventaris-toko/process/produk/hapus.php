@@ -1,12 +1,23 @@
 <?php
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../auth/cek_login.php';
+require_once __DIR__ . '/../../includes/upload_produk.php';
 requireAdmin();
 
 $id = (int) ($_GET['id'] ?? 0);
 
 if ($id <= 0) {
     $_SESSION['flash_error'] = 'ID tidak valid.';
+    header('Location: ' . getBaseUrl() . '/admin/produk/index.php');
+    exit;
+}
+
+$stmt = $pdo->prepare('SELECT path FROM produk WHERE id_produk = ?');
+$stmt->execute([$id]);
+$produk = $stmt->fetch();
+
+if (!$produk) {
+    $_SESSION['flash_error'] = 'Produk tidak ditemukan.';
     header('Location: ' . getBaseUrl() . '/admin/produk/index.php');
     exit;
 }
@@ -24,6 +35,8 @@ if ($masuk > 0 || $keluar > 0) {
     header('Location: ' . getBaseUrl() . '/admin/produk/index.php');
     exit;
 }
+
+deleteProdukImage($produk['path']);
 
 $stmt = $pdo->prepare('DELETE FROM produk WHERE id_produk = ?');
 $stmt->execute([$id]);

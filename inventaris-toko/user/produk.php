@@ -2,6 +2,7 @@
 $pageTitle = 'Daftar Produk';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../auth/cek_login.php';
+require_once __DIR__ . '/../includes/upload_produk.php';
 
 if ($_SESSION['role'] === 'admin') {
     header('Location: ' . getBaseUrl() . '/admin/produk/index.php');
@@ -30,6 +31,7 @@ require_once __DIR__ . '/../includes/sidebar.php';
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Gambar</th>
                         <th>Kode</th>
                         <th>Nama Produk</th>
                         <th>Kategori</th>
@@ -41,6 +43,13 @@ require_once __DIR__ . '/../includes/sidebar.php';
                     <?php foreach ($produk as $i => $p): ?>
                     <tr>
                         <td><?= $i + 1 ?></td>
+                        <td>
+                            <?php if ($img = produkImageUrl($p['path'] ?? null)): ?>
+                                <img src="<?= $img ?>" alt="<?= htmlspecialchars($p['nama_produk']) ?>" class="produk-thumb">
+                            <?php else: ?>
+                                -
+                            <?php endif; ?>
+                        </td>
                         <td><?= htmlspecialchars($p['kode_produk'] ?? '-') ?></td>
                         <td><?= htmlspecialchars($p['nama_produk']) ?></td>
                         <td><?= htmlspecialchars($p['nama_kategori']) ?></td>
