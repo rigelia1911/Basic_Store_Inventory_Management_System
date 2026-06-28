@@ -12,6 +12,7 @@ $transaksi = $pdo->query(
      ORDER BY tk.tanggal_keluar DESC, tk.id_keluar DESC'
 )->fetchAll();
 
+
 require_once __DIR__ . '/../../includes/header.php';
 require_once __DIR__ . '/../../includes/sidebar.php';
 ?>

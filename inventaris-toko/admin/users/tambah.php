@@ -15,23 +15,25 @@ require_once __DIR__ . '/../../includes/sidebar.php';
             <a href="index.php" class="btn btn-secondary">&larr; Kembali</a>
         </div>
 
+        <?php flashMessage(); ?>
+
         <div class="card" style="max-width:500px;">
             <form method="POST" action="<?= getBaseUrl() ?>/process/users/tambah.php">
                 <div class="form-group">
                     <label for="nama">Nama Lengkap</label>
-                    <input type="text" id="nama" name="nama" class="form-control" required autofocus>
+                    <input type="text" id="nama" name="nama" class="form-control" autofocus>
                 </div>
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" class="form-control" required>
+                    <input type="text" id="username" name="username" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" required>
+                    <input type="password" id="password" name="password" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="role">Role</label>
-                    <select id="role" name="role" class="form-control" required>
+                    <select id="role" name="role" class="form-control">
                         <option value="user">User</option>
                         <option value="admin">Admin</option>
                     </select>

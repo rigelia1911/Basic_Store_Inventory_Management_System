@@ -18,6 +18,8 @@ require_once __DIR__ . '/../../includes/sidebar.php';
             <a href="index.php" class="btn btn-secondary">&larr; Kembali</a>
         </div>
 
+        <?php flashMessage(); ?>
+
         <div class="card" style="max-width:600px;">
             <?php if (!$kategori): ?>
                 <div class="alert alert-warning">Tambahkan kategori terlebih dahulu sebelum menambah produk.</div>
@@ -25,7 +27,7 @@ require_once __DIR__ . '/../../includes/sidebar.php';
             <form method="POST" action="<?= getBaseUrl() ?>/process/produk/tambah.php" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="id_kategori">Kategori</label>
-                    <select id="id_kategori" name="id_kategori" class="form-control" required>
+                    <select id="id_kategori" name="id_kategori" class="form-control">
                         <option value="">-- Pilih Kategori --</option>
                         <?php foreach ($kategori as $k): ?>
                         <option value="<?= $k['id_kategori'] ?>"><?= htmlspecialchars($k['nama_kategori']) ?></option>
@@ -34,7 +36,7 @@ require_once __DIR__ . '/../../includes/sidebar.php';
                 </div>
                 <div class="form-group">
                     <label for="nama_produk">Nama Produk</label>
-                    <input type="text" id="nama_produk" name="nama_produk" class="form-control" required>
+                    <input type="text" id="nama_produk" name="nama_produk" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="kode_produk">Kode Produk</label>
@@ -42,11 +44,11 @@ require_once __DIR__ . '/../../includes/sidebar.php';
                 </div>
                 <div class="form-group">
                     <label for="harga_beli">Harga Beli</label>
-                    <input type="number" id="harga_beli" name="harga_beli" class="form-control" min="1" required>
+                    <input type="number" id="harga_beli" name="harga_beli" class="form-control" min="1">
                 </div>
                 <div class="form-group">
                     <label for="harga_jual">Harga Jual</label>
-                    <input type="number" id="harga_jual" name="harga_jual" class="form-control" min="1" required>
+                    <input type="number" id="harga_jual" name="harga_jual" class="form-control" min="1">
                 </div>
                 <div class="form-group">
                     <label for="stok">Stok Awal</label>
@@ -54,7 +56,7 @@ require_once __DIR__ . '/../../includes/sidebar.php';
                 </div>
                 <div class="form-group">
                     <label for="gambar">Gambar Produk</label>
-                    <input type="file" id="gambar" name="gambar" class="form-control" accept="image/jpeg,image/png,image/gif,image/webp" required>
+                    <input type="file" id="gambar" name="gambar" class="form-control" accept="image/jpeg,image/png,image/gif,image/webp">
                     <small class="form-hint">Format: JPG, PNG, GIF, WEBP. Maksimal 2 MB.</small>
                 </div>
                 <div class="form-group">

@@ -11,6 +11,12 @@ if ($nama_kategori === '') {
     exit;
 }
 
+if (strlen($nama_kategori) < 3 || strlen($nama_kategori) > 100) {
+    $_SESSION['flash_error'] = 'Nama kategori minimal 3 karakter dan maksimal 100 karakter.';
+    header('Location: ' . getBaseUrl() . '/admin/kategori/tambah.php');
+    exit;
+}
+
 $stmt = $pdo->prepare('INSERT INTO kategori (nama_kategori) VALUES (?)');
 $stmt->execute([$nama_kategori]);
 

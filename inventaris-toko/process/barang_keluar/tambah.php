@@ -6,8 +6,26 @@ $id_produk      = (int) ($_POST['id_produk'] ?? 0);
 $tanggal_keluar = $_POST['tanggal_keluar'] ?? '';
 $jumlah_keluar  = (int) ($_POST['jumlah_keluar'] ?? 0);
 
-if ($id_produk <= 0 || $tanggal_keluar === '' || $jumlah_keluar <= 0) {
-    $_SESSION['flash_error'] = 'Data transaksi tidak valid.';
+if ($id_produk <= 0) {
+    $_SESSION['flash_error'] = 'Produk wajib dipilih.';
+    $redirect = ($_SESSION['role'] === 'admin')
+        ? getBaseUrl() . '/admin/barang_keluar/tambah.php'
+        : getBaseUrl() . '/user/barang_keluar.php';
+    header('Location: ' . $redirect);
+    exit;
+}
+
+if ($tanggal_keluar === '' || !isValidDateString($tanggal_keluar)) {
+    $_SESSION['flash_error'] = 'Tanggal keluar wajib diisi dengan format YYYY-MM-DD yang valid.';
+    $redirect = ($_SESSION['role'] === 'admin')
+        ? getBaseUrl() . '/admin/barang_keluar/tambah.php'
+        : getBaseUrl() . '/user/barang_keluar.php';
+    header('Location: ' . $redirect);
+    exit;
+}
+
+if (!isPositiveInteger($jumlah_keluar)) {
+    $_SESSION['flash_error'] = 'Jumlah keluar harus berupa angka bulat positif.';
     $redirect = ($_SESSION['role'] === 'admin')
         ? getBaseUrl() . '/admin/barang_keluar/tambah.php'
         : getBaseUrl() . '/user/barang_keluar.php';

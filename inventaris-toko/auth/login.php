@@ -27,6 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($username === '' || $password === '') {
         $error = 'Username dan password wajib diisi.';
+    } elseif (strlen($username) < 3 || strlen($username) > 50) {
+        $error = 'Username minimal 3 karakter dan maksimal 50 karakter.';
+    } elseif (strlen($password) < 6 || strlen($password) > 64) {
+        $error = 'Password minimal 6 karakter dan maksimal 64 karakter.';
     } else {
         $stmt = $pdo->prepare('SELECT * FROM users WHERE username = ?');
         $stmt->execute([$username]);
@@ -75,11 +79,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" class="form-control"
-                           value="<?= htmlspecialchars($_POST['username'] ?? '') ?>" required autofocus>
+                           value="<?= htmlspecialchars($_POST['username'] ?? '') ?>" autofocus>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" required>
+                    <input type="password" id="password" name="password" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem;">Masuk</button>
             </form>

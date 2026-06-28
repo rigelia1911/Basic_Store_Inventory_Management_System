@@ -13,9 +13,57 @@ $harga_jual   = (float) ($_POST['harga_jual'] ?? 0);
 $stok         = (int) ($_POST['stok'] ?? 0);
 $deskripsi    = trim($_POST['deskripsi'] ?? '');
 
-if ($id_produk <= 0 || $id_kategori <= 0 || $nama_produk === '' || $harga_beli <= 0 || $harga_jual <= 0) {
-    $_SESSION['flash_error'] = 'Data produk tidak lengkap atau tidak valid.';
+if ($id_produk <= 0) {
+    $_SESSION['flash_error'] = 'ID produk tidak valid.';
     header('Location: ' . getBaseUrl() . '/admin/produk/index.php');
+    exit;
+}
+
+if ($id_kategori <= 0) {
+    $_SESSION['flash_error'] = 'Kategori produk wajib dipilih.';
+    header('Location: ' . getBaseUrl() . '/admin/produk/edit.php?id=' . $id_produk);
+    exit;
+}
+
+if ($nama_produk === '') {
+    $_SESSION['flash_error'] = 'Nama produk wajib diisi.';
+    header('Location: ' . getBaseUrl() . '/admin/produk/edit.php?id=' . $id_produk);
+    exit;
+}
+
+if (strlen($nama_produk) < 3 || strlen($nama_produk) > 100) {
+    $_SESSION['flash_error'] = 'Nama produk minimal 3 karakter dan maksimal 100 karakter.';
+    header('Location: ' . getBaseUrl() . '/admin/produk/edit.php?id=' . $id_produk);
+    exit;
+}
+
+if ($kode_produk !== '' && strlen($kode_produk) > 50) {
+    $_SESSION['flash_error'] = 'Kode produk maksimal 50 karakter.';
+    header('Location: ' . getBaseUrl() . '/admin/produk/edit.php?id=' . $id_produk);
+    exit;
+}
+
+if (!isPositiveNumber($harga_beli)) {
+    $_SESSION['flash_error'] = 'Harga beli harus berupa angka positif.';
+    header('Location: ' . getBaseUrl() . '/admin/produk/edit.php?id=' . $id_produk);
+    exit;
+}
+
+if (!isPositiveNumber($harga_jual)) {
+    $_SESSION['flash_error'] = 'Harga jual harus berupa angka positif.';
+    header('Location: ' . getBaseUrl() . '/admin/produk/edit.php?id=' . $id_produk);
+    exit;
+}
+
+if (!isNonNegativeInteger($stok)) {
+    $_SESSION['flash_error'] = 'Stok harus berupa angka bulat non-negatif.';
+    header('Location: ' . getBaseUrl() . '/admin/produk/edit.php?id=' . $id_produk);
+    exit;
+}
+
+if ($deskripsi !== '' && strlen($deskripsi) > 500) {
+    $_SESSION['flash_error'] = 'Deskripsi maksimal 500 karakter.';
+    header('Location: ' . getBaseUrl() . '/admin/produk/edit.php?id=' . $id_produk);
     exit;
 }
 

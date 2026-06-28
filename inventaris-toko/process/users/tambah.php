@@ -8,8 +8,32 @@ $username = trim($_POST['username'] ?? '');
 $password = $_POST['password'] ?? '';
 $role     = $_POST['role'] ?? '';
 
-if ($nama === '' || $username === '' || $password === '' || !in_array($role, ['admin', 'user'])) {
-    $_SESSION['flash_error'] = 'Data pengguna tidak lengkap.';
+if ($nama === '' || $username === '' || $password === '') {
+    $_SESSION['flash_error'] = 'Nama, username, dan password wajib diisi.';
+    header('Location: ' . getBaseUrl() . '/admin/users/tambah.php');
+    exit;
+}
+
+if (strlen($nama) < 3 || strlen($nama) > 100) {
+    $_SESSION['flash_error'] = 'Nama lengkap minimal 3 karakter dan maksimal 100 karakter.';
+    header('Location: ' . getBaseUrl() . '/admin/users/tambah.php');
+    exit;
+}
+
+if (strlen($username) < 3 || strlen($username) > 50) {
+    $_SESSION['flash_error'] = 'Username minimal 3 karakter dan maksimal 50 karakter.';
+    header('Location: ' . getBaseUrl() . '/admin/users/tambah.php');
+    exit;
+}
+
+if (strlen($password) < 6 || strlen($password) > 64) {
+    $_SESSION['flash_error'] = 'Password minimal 6 karakter dan maksimal 64 karakter.';
+    header('Location: ' . getBaseUrl() . '/admin/users/tambah.php');
+    exit;
+}
+
+if (!in_array($role, ['admin', 'user'], true)) {
+    $_SESSION['flash_error'] = 'Role tidak valid.';
     header('Location: ' . getBaseUrl() . '/admin/users/tambah.php');
     exit;
 }

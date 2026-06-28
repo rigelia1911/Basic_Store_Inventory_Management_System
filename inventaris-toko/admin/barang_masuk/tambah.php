@@ -17,6 +17,8 @@ require_once __DIR__ . '/../../includes/sidebar.php';
             <a href="index.php" class="btn btn-secondary">&larr; Kembali</a>
         </div>
 
+        <?php flashMessage(); ?>
+
         <div class="card" style="max-width:500px;">
             <?php if (!$produk): ?>
                 <div class="alert alert-warning">Tambahkan produk terlebih dahulu.</div>
@@ -24,7 +26,7 @@ require_once __DIR__ . '/../../includes/sidebar.php';
             <form method="POST" action="<?= getBaseUrl() ?>/process/barang_masuk/tambah.php">
                 <div class="form-group">
                     <label for="id_produk">Produk</label>
-                    <select id="id_produk" name="id_produk" class="form-control" required>
+                    <select id="id_produk" name="id_produk" class="form-control">
                         <option value="">-- Pilih Produk --</option>
                         <?php foreach ($produk as $p): ?>
                         <option value="<?= $p['id_produk'] ?>">
@@ -37,11 +39,11 @@ require_once __DIR__ . '/../../includes/sidebar.php';
                 <div class="form-group">
                     <label for="tanggal_masuk">Tanggal Masuk</label>
                     <input type="date" id="tanggal_masuk" name="tanggal_masuk" class="form-control"
-                           value="<?= date('Y-m-d') ?>" required>
+                           value="<?= date('Y-m-d') ?>">
                 </div>
                 <div class="form-group">
                     <label for="jumlah_masuk">Jumlah Masuk</label>
-                    <input type="number" id="jumlah_masuk" name="jumlah_masuk" class="form-control" min="1" required>
+                    <input type="number" id="jumlah_masuk" name="jumlah_masuk" class="form-control" min="1">
                 </div>
                 <button type="submit" class="btn btn-success">Simpan Transaksi</button>
             </form>

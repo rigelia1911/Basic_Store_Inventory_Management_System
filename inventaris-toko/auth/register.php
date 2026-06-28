@@ -18,15 +18,20 @@ $success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nama            = trim($_POST['nama'] ?? '');
     $username        = trim($_POST['username'] ?? '');
+    $email           = trim($_POST['email'] ?? '');
     $password        = $_POST['password'] ?? '';
     $confirmPassword = $_POST['confirm_password'] ?? '';
 
     if ($nama === '' || $username === '' || $password === '' || $confirmPassword === '') {
         $error = 'Semua field wajib diisi.';
-    } elseif (strlen($username) < 3) {
-        $error = 'Username minimal 3 karakter.';
-    } elseif (strlen($password) < 6) {
-        $error = 'Password minimal 6 karakter.';
+    } elseif (strlen($nama) < 3 || strlen($nama) > 100) {
+        $error = 'Nama lengkap minimal 3 karakter dan maksimal 100 karakter.';
+    } elseif (strlen($username) < 3 || strlen($username) > 50) {
+        $error = 'Username minimal 3 karakter dan maksimal 50 karakter.';
+    } elseif ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = 'Format email tidak valid.';
+    } elseif (strlen($password) < 6 || strlen($password) > 64) {
+        $error = 'Password minimal 6 karakter dan maksimal 64 karakter.';
     } elseif ($password !== $confirmPassword) {
         $error = 'Konfirmasi password tidak cocok.';
     } else {
@@ -75,20 +80,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label for="nama">Nama Lengkap</label>
                     <input type="text" id="nama" name="nama" class="form-control"
-                           value="<?= htmlspecialchars($_POST['nama'] ?? '') ?>" required autofocus>
+                           value="<?= htmlspecialchars($_POST['nama'] ?? '') ?>" autofocus>
                 </div>
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" class="form-control"
-                           value="<?= htmlspecialchars($_POST['username'] ?? '') ?>" required>
+                           value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" class="form-control"
+                           value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" placeholder="Opsional">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" required>
+                    <input type="password" id="password" name="password" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="confirm_password">Konfirmasi Password</label>
-                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem;">Daftar</button>
             </form>
