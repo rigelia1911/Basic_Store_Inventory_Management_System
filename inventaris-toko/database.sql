@@ -63,9 +63,10 @@ INSERT INTO kategori (nama_kategori) VALUES
 ('Minuman'),
 ('Kebutuhan Rumah');
 
-INSERT INTO produk (id_kategori, nama_produk, kode_produk, harga_beli, harga_jual, stok, deskripsi) VALUES
-(1, 'Beras 5kg', 'BR-001', 55000, 65000, 20, 'Beras premium 5 kilogram'),
-(2, 'Air Mineral 600ml', 'AM-001', 2500, 4000, 50, 'Air mineral kemasan botol'),
-(3, 'Sabun Cuci Piring', 'SC-001', 8000, 12000, 30, 'Sabun cuci piring 400ml');
+INSERT INTO produk (id_kategori, nama_produk, kode_produk, harga_beli, harga_jual, stok, path, deskripsi) VALUES
+(1, 'Beras 5kg', 'BR-001', 55000, 65000, 20, produk/produk_6a40ae74aab5c7.48228427.jpg, 'Beras premium 5 kilogram'),
+(2, 'Air Mineral 600ml', 'AM-001', 2500, 4000, 50, produk/produk_6a40ade641f101.24424888.jpg, 'Air mineral kemasan botol'),
+(3, 'Sabun Cuci Piring', 'SC-001', 8000, 12000, 30, produk/produk_6a40aeb5d2b0f4.12613621.png, 'Sabun cuci piring 400ml');
+
 
 -- Password default: password
