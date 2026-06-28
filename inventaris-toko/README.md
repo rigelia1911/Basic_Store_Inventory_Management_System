@@ -3,7 +3,7 @@ Tugas Akhir Mata Kuliah
 Pemrograman Sisi Back-End
 # Inventaris Toko
 
-Sistem manajemen inventaris toko sederhana menggunakan HTML5, CSS, dan Native PHP.
+Sistem manajemen inventaris toko sederhana berbasis aplikasi website menggunakan HTML5, CSS, dan Native PHP.
 
 ## Persyaratan
 
