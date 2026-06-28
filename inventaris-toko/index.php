@@ -10,8 +10,10 @@
     <div class="landing">
         <header class="landing-header">
             <div class="landing-logo">Inventaris Toko</div>
+            <div class="auth btn">
             <a href="auth/login.php" class="btn btn-primary">Masuk</a>
             <a href="auth/register.php" class="btn btn-secondary" style="margin-left:0.5rem;">Daftar</a>
+            </div>
         </header>
 
         <section class="landing-hero">
