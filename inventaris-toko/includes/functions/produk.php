@@ -3,6 +3,15 @@
 require_once __DIR__ . '/../validasi.php';
 require_once __DIR__ . '/../upload_produk.php';
 
+function escapeLikeKeyword(string $keyword): string
+{
+    return strtr($keyword, [
+        '\\' => '\\\\',
+        '%'  => '\\%',
+        '_'  => '\\_',
+    ]);
+}
+
 function cariProduk(PDO $pdo, string $keyword = ''): array
 {
     $keyword = trim($keyword);
@@ -15,9 +24,11 @@ function cariProduk(PDO $pdo, string $keyword = ''): array
         return $pdo->query($sql)->fetchAll();
     }
 
-    $sql .= ' WHERE p.nama_produk LIKE ? OR p.kode_produk LIKE ? OR k.nama_kategori LIKE ?
-              ORDER BY p.nama_produk';
-    $like = '%' . $keyword . '%';
+    $sql .= " WHERE p.nama_produk LIKE ? ESCAPE '\\\\'
+              OR p.kode_produk LIKE ? ESCAPE '\\\\'
+              OR k.nama_kategori LIKE ? ESCAPE '\\\\'
+              ORDER BY p.nama_produk";
+    $like = '%' . escapeLikeKeyword($keyword) . '%';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$like, $like, $like]);
 

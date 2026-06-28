@@ -52,7 +52,8 @@ require_once __DIR__ . '/../../includes/sidebar.php';
                 </div>
                 <div class="form-group">
                     <label for="stok">Stok Awal</label>
-                    <input type="number" id="stok" name="stok" class="form-control" min="0" value="0">
+                    <input type="number" id="stok" name="stok" class="form-control" min="-999999">
+
                 </div>
                 <div class="form-group">
                     <label for="gambar">Gambar Produk</label>
