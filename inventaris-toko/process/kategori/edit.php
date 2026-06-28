@@ -1,33 +1,21 @@
 <?php
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../auth/cek_login.php';
-require_once __DIR__ . '/../../includes/validasi.php';
+require_once __DIR__ . '/../../includes/functions.php';
 requireAdmin();
 
-$id_kategori   = (int) ($_POST['id_kategori'] ?? 0);
-$nama_kategori = trim($_POST['nama_kategori'] ?? '');
+$id = (int) ($_POST['id_kategori'] ?? 0);
+$result = editKategori($pdo, $_POST);
 
-if ($id_kategori <= 0) {
-    $_SESSION['flash_error'] = 'ID kategori tidak valid.';
-    header('Location: ' . getBaseUrl() . '/admin/kategori/index.php');
+if (!$result['success']) {
+    $_SESSION['flash_error'] = $result['error'];
+    $redirect = $id > 0
+        ? '/inventaris-toko/admin/kategori/edit.php?id=' . $id
+        : '/inventaris-toko/admin/kategori/index.php';
+    header('Location: ' . $redirect);
     exit;
 }
 
-if ($nama_kategori === '') {
-    $_SESSION['flash_error'] = 'Nama kategori wajib diisi.';
-    header('Location: ' . getBaseUrl() . '/admin/kategori/edit.php?id=' . $id_kategori);
-    exit;
-}
-
-if (strlen($nama_kategori) < 3 || strlen($nama_kategori) > 100) {
-    $_SESSION['flash_error'] = 'Nama kategori minimal 3 karakter dan maksimal 100 karakter.';
-    header('Location: ' . getBaseUrl() . '/admin/kategori/edit.php?id=' . $id_kategori);
-    exit;
-}
-
-$stmt = $pdo->prepare('UPDATE kategori SET nama_kategori = ? WHERE id_kategori = ?');
-$stmt->execute([$nama_kategori, $id_kategori]);
-
-$_SESSION['flash_success'] = 'Kategori berhasil diperbarui.';
-header('Location: ' . getBaseUrl() . '/admin/kategori/index.php');
+$_SESSION['flash_success'] = $result['message'];
+header('Location: /inventaris-toko/admin/kategori/index.php');
 exit;

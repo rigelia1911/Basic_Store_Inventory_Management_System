@@ -1,17 +1,13 @@
 <?php
 session_start();
+require_once __DIR__ . '/../includes/functions.php';
 
 if (isset($_SESSION['id_user'])) {
-    if ($_SESSION['role'] === 'admin') {
-        header('Location: ../admin/index.php');
-    } else {
-        header('Location: ../user/index.php');
-    }
+    header('Location: ' . getLoginRedirectUrl($_SESSION['role']));
     exit;
 }
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../includes/validasi.php';
 
 $error = '';
 
@@ -23,36 +19,14 @@ if (!empty($_SESSION['flash_success'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
+    $result = loginUser($pdo, $_POST['username'] ?? '', $_POST['password'] ?? '');
 
-    if ($username === '' || $password === '') {
-        $error = 'Username dan password wajib diisi.';
-    } elseif (strlen($username) < 3 || strlen($username) > 50) {
-        $error = 'Username minimal 3 karakter dan maksimal 50 karakter.';
-    } elseif (strlen($password) < 6 || strlen($password) > 64) {
-        $error = 'Password minimal 6 karakter dan maksimal 64 karakter.';
-    } else {
-        $stmt = $pdo->prepare('SELECT * FROM users WHERE username = ?');
-        $stmt->execute([$username]);
-        $user = $stmt->fetch();
-
-        if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['id_user']  = $user['id_user'];
-            $_SESSION['nama']     = $user['nama'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['role']     = $user['role'];
-
-            if ($user['role'] === 'admin') {
-                header('Location: ../admin/index.php');
-            } else {
-                header('Location: ../user/index.php');
-            }
-            exit;
-        } else {
-            $error = 'Username atau password salah.';
-        }
+    if ($result['success']) {
+        header('Location: ' . getLoginRedirectUrl($result['role']));
+        exit;
     }
+
+    $error = $result['error'];
 }
 ?>
 <!DOCTYPE html>

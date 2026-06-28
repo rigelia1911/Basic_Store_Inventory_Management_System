@@ -2,32 +2,19 @@
 $pageTitle = 'Dashboard';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../auth/cek_login.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 if ($_SESSION['role'] === 'admin') {
-    header('Location: ' . getBaseUrl() . '/admin/index.php');
+    header('Location: /inventaris-toko/admin/index.php');
     exit;
 }
 
-$totalProduk = $pdo->query('SELECT COUNT(*) FROM produk')->fetchColumn();
-$stokRendah  = $pdo->query('SELECT COUNT(*) FROM produk WHERE stok <= 5')->fetchColumn();
-
-$masukSaya = $pdo->prepare(
-    'SELECT COALESCE(SUM(jumlah_masuk), 0) FROM transaksi_masuk WHERE id_user = ? AND tanggal_masuk = CURDATE()'
-);
-$masukSaya->execute([$_SESSION['id_user']]);
-$masukHariIni = $masukSaya->fetchColumn();
-
-$keluarSaya = $pdo->prepare(
-    'SELECT COALESCE(SUM(jumlah_keluar), 0) FROM transaksi_keluar WHERE id_user = ? AND tanggal_keluar = CURDATE()'
-);
-$keluarSaya->execute([$_SESSION['id_user']]);
-$keluarHariIni = $keluarSaya->fetchColumn();
-
-$produk = $pdo->query(
-    'SELECT p.nama_produk, p.stok, k.nama_kategori
-     FROM produk p JOIN kategori k ON p.id_kategori = k.id_kategori
-     ORDER BY p.nama_produk LIMIT 10'
-)->fetchAll();
+$totalProduk    = hitungTotalProduk($pdo);
+$stokRendah     = hitungProdukStokRendah($pdo);
+$masukHariIni   = hitungBarangMasukHariIni($pdo, (int) $_SESSION['id_user']);
+$keluarHariIni  = hitungBarangKeluarHariIni($pdo, (int) $_SESSION['id_user']);
+$produk         = cariProduk($pdo);
+$produk         = array_slice($produk, 0, 10);
 
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/sidebar.php';

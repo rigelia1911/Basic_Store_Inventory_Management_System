@@ -1,46 +1,15 @@
 <?php
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../auth/cek_login.php';
-require_once __DIR__ . '/../../includes/upload_produk.php';
+require_once __DIR__ . '/../../includes/functions.php';
 requireAdmin();
 
 $id = (int) ($_GET['id'] ?? 0);
+$result = hapusProduk($pdo, $id);
 
-if ($id <= 0) {
-    $_SESSION['flash_error'] = 'ID tidak valid.';
-    header('Location: ' . getBaseUrl() . '/admin/produk/index.php');
-    exit;
-}
+$_SESSION[$result['success'] ? 'flash_success' : 'flash_error'] = $result['success']
+    ? $result['message']
+    : $result['error'];
 
-$stmt = $pdo->prepare('SELECT path FROM produk WHERE id_produk = ?');
-$stmt->execute([$id]);
-$produk = $stmt->fetch();
-
-if (!$produk) {
-    $_SESSION['flash_error'] = 'Produk tidak ditemukan.';
-    header('Location: ' . getBaseUrl() . '/admin/produk/index.php');
-    exit;
-}
-
-$stmt = $pdo->prepare('SELECT COUNT(*) FROM transaksi_masuk WHERE id_produk = ?');
-$stmt->execute([$id]);
-$masuk = $stmt->fetchColumn();
-
-$stmt = $pdo->prepare('SELECT COUNT(*) FROM transaksi_keluar WHERE id_produk = ?');
-$stmt->execute([$id]);
-$keluar = $stmt->fetchColumn();
-
-if ($masuk > 0 || $keluar > 0) {
-    $_SESSION['flash_error'] = 'Produk tidak dapat dihapus karena memiliki riwayat transaksi.';
-    header('Location: ' . getBaseUrl() . '/admin/produk/index.php');
-    exit;
-}
-
-deleteProdukImage($produk['path']);
-
-$stmt = $pdo->prepare('DELETE FROM produk WHERE id_produk = ?');
-$stmt->execute([$id]);
-
-$_SESSION['flash_success'] = 'Produk berhasil dihapus.';
-header('Location: ' . getBaseUrl() . '/admin/produk/index.php');
+header('Location: /inventaris-toko/admin/produk/index.php');
 exit;

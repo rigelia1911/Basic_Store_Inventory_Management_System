@@ -1,60 +1,27 @@
 <?php
 session_start();
+require_once __DIR__ . '/../includes/functions.php';
 
 if (isset($_SESSION['id_user'])) {
-    if ($_SESSION['role'] === 'admin') {
-        header('Location: ../admin/index.php');
-    } else {
-        header('Location: ../user/index.php');
-    }
+    header('Location: ' . getLoginRedirectUrl($_SESSION['role']));
     exit;
 }
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../includes/validasi.php';
 
 $error   = '';
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nama            = trim($_POST['nama'] ?? '');
-    $username        = trim($_POST['username'] ?? '');
-    $email           = trim($_POST['email'] ?? '');
-    $password        = $_POST['password'] ?? '';
-    $confirmPassword = $_POST['confirm_password'] ?? '';
+    $result = registerUser($pdo, $_POST);
 
-    if ($nama === '' || $username === '' || $password === '' || $confirmPassword === '') {
-        $error = 'Semua field wajib diisi.';
-    } elseif (strlen($nama) < 3 || strlen($nama) > 100) {
-        $error = 'Nama lengkap minimal 3 karakter dan maksimal 100 karakter.';
-    } elseif (strlen($username) < 3 || strlen($username) > 50) {
-        $error = 'Username minimal 3 karakter dan maksimal 50 karakter.';
-    } elseif ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = 'Format email tidak valid.';
-    } elseif (strlen($password) < 6 || strlen($password) > 64) {
-        $error = 'Password minimal 6 karakter dan maksimal 64 karakter.';
-    } elseif ($password !== $confirmPassword) {
-        $error = 'Konfirmasi password tidak cocok.';
-    } else {
-        $stmt = $pdo->prepare('SELECT COUNT(*) FROM users WHERE username = ?');
-        $stmt->execute([$username]);
-
-        if ($stmt->fetchColumn() > 0) {
-            $error = 'Username sudah digunakan, silakan pilih username lain.';
-        } else {
-            $hash = password_hash($password, PASSWORD_DEFAULT);
-            $role = 'user';
-
-            $stmt = $pdo->prepare(
-                'INSERT INTO users (nama, username, password, role) VALUES (?, ?, ?, ?)'
-            );
-            $stmt->execute([$nama, $username, $hash, $role]);
-
-            $_SESSION['flash_success'] = 'Registrasi berhasil! Silakan login.';
-            header('Location: login.php');
-            exit;
-        }
+    if ($result['success']) {
+        $_SESSION['flash_success'] = $result['message'];
+        header('Location: login.php');
+        exit;
     }
+
+    $error = $result['error'];
 }
 ?>
 <!DOCTYPE html>

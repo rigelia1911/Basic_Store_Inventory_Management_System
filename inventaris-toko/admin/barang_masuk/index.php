@@ -2,15 +2,11 @@
 $pageTitle = 'Barang Masuk';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../auth/cek_login.php';
+require_once __DIR__ . '/../../includes/functions.php';
 requireAdmin();
 
-$transaksi = $pdo->query(
-    'SELECT tm.*, p.nama_produk, p.kode_produk, u.nama AS nama_user
-     FROM transaksi_masuk tm
-     JOIN produk p ON tm.id_produk = p.id_produk
-     JOIN users u ON tm.id_user = u.id_user
-     ORDER BY tm.tanggal_masuk DESC, tm.id_masuk DESC'
-)->fetchAll();
+$keyword   = trim($_GET['cari'] ?? '');
+$transaksi = cariTransaksiMasuk($pdo, $keyword);
 
 require_once __DIR__ . '/../../includes/header.php';
 require_once __DIR__ . '/../../includes/sidebar.php';
@@ -24,6 +20,15 @@ require_once __DIR__ . '/../../includes/sidebar.php';
             <h1>Transaksi Barang Masuk</h1>
             <a href="tambah.php" class="btn btn-success">+ Catat Barang Masuk</a>
         </div>
+
+        <form method="GET" class="card" style="margin-bottom:1rem;padding:1rem;display:flex;gap:0.5rem;align-items:center;">
+            <input type="text" name="cari" class="form-control" placeholder="Cari produk atau petugas..."
+                   value="<?= htmlspecialchars($keyword) ?>" style="max-width:320px;">
+            <button type="submit" class="btn btn-secondary">Cari</button>
+            <?php if ($keyword !== ''): ?>
+                <a href="index.php" class="btn btn-secondary">Reset</a>
+            <?php endif; ?>
+        </form>
 
         <div class="table-wrapper">
             <?php if ($transaksi): ?>
@@ -57,7 +62,7 @@ require_once __DIR__ . '/../../includes/sidebar.php';
                 </tbody>
             </table>
             <?php else: ?>
-            <div class="empty-state">Belum ada transaksi barang masuk.</div>
+            <div class="empty-state"><?= $keyword !== '' ? 'Transaksi tidak ditemukan.' : 'Belum ada transaksi barang masuk.' ?></div>
             <?php endif; ?>
         </div>
     </div>

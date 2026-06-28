@@ -3,23 +3,15 @@ $pageTitle = 'Barang Masuk';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../auth/cek_login.php';
 
+require_once __DIR__ . '/../includes/functions.php';
+
 if ($_SESSION['role'] === 'admin') {
-    header('Location: ' . getBaseUrl() . '/admin/barang_masuk/index.php');
+    header('Location: /inventaris-toko/admin/barang_masuk/index.php');
     exit;
 }
 
-$produk = $pdo->query('SELECT id_produk, nama_produk, kode_produk, stok FROM produk ORDER BY nama_produk')->fetchAll();
-
-$transaksi = $pdo->prepare(
-    'SELECT tm.*, p.nama_produk, p.kode_produk
-     FROM transaksi_masuk tm
-     JOIN produk p ON tm.id_produk = p.id_produk
-     WHERE tm.id_user = ?
-     ORDER BY tm.tanggal_masuk DESC, tm.id_masuk DESC
-     LIMIT 20'
-);
-$transaksi->execute([$_SESSION['id_user']]);
-$riwayat = $transaksi->fetchAll();
+$produk  = getProdukUntukTransaksi($pdo);
+$riwayat = cariTransaksiMasuk($pdo, '', (int) $_SESSION['id_user']);
 
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/sidebar.php';
@@ -38,7 +30,7 @@ require_once __DIR__ . '/../includes/sidebar.php';
             <?php if (!$produk): ?>
                 <div class="alert alert-warning">Belum ada produk tersedia.</div>
             <?php else: ?>
-            <form method="POST" action="<?= getBaseUrl() ?>/process/barang_masuk/tambah.php">
+            <form method="POST" action="/inventaris-toko/process/barang_masuk/tambah.php">
                 <div class="form-group">
                     <label for="id_produk">Produk</label>
                     <select id="id_produk" name="id_produk" class="form-control" required>

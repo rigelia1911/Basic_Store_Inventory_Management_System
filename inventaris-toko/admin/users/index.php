@@ -2,9 +2,11 @@
 $pageTitle = 'Pengguna';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../auth/cek_login.php';
+require_once __DIR__ . '/../../includes/functions.php';
 requireAdmin();
 
-$users = $pdo->query('SELECT * FROM users ORDER BY created_at DESC')->fetchAll();
+$keyword = trim($_GET['cari'] ?? '');
+$users   = cariUser($pdo, $keyword);
 
 require_once __DIR__ . '/../../includes/header.php';
 require_once __DIR__ . '/../../includes/sidebar.php';
@@ -18,6 +20,15 @@ require_once __DIR__ . '/../../includes/sidebar.php';
             <h1>Data Pengguna</h1>
             <a href="tambah.php" class="btn btn-primary">+ Tambah Pengguna</a>
         </div>
+
+        <form method="GET" class="card" style="margin-bottom:1rem;padding:1rem;display:flex;gap:0.5rem;align-items:center;">
+            <input type="text" name="cari" class="form-control" placeholder="Cari nama, username, atau role..."
+                   value="<?= htmlspecialchars($keyword) ?>" style="max-width:320px;">
+            <button type="submit" class="btn btn-secondary">Cari</button>
+            <?php if ($keyword !== ''): ?>
+                <a href="index.php" class="btn btn-secondary">Reset</a>
+            <?php endif; ?>
+        </form>
 
         <div class="table-wrapper">
             <?php if ($users): ?>
@@ -56,7 +67,7 @@ require_once __DIR__ . '/../../includes/sidebar.php';
                 </tbody>
             </table>
             <?php else: ?>
-            <div class="empty-state">Belum ada data pengguna.</div>
+            <div class="empty-state"><?= $keyword !== '' ? 'Pengguna tidak ditemukan.' : 'Belum ada data pengguna.' ?></div>
             <?php endif; ?>
         </div>
     </div>

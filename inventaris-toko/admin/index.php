@@ -2,26 +2,16 @@
 $pageTitle = 'Dashboard';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../auth/cek_login.php';
+require_once __DIR__ . '/../includes/functions.php';
 requireAdmin();
 
-$totalProduk   = $pdo->query('SELECT COUNT(*) FROM produk')->fetchColumn();
-$totalKategori = $pdo->query('SELECT COUNT(*) FROM kategori')->fetchColumn();
-$totalUsers    = $pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
-$stokRendah    = $pdo->query('SELECT COUNT(*) FROM produk WHERE stok <= 5')->fetchColumn();
-
-$masukHariIni = $pdo->query(
-    "SELECT COALESCE(SUM(jumlah_masuk), 0) FROM transaksi_masuk WHERE tanggal_masuk = CURDATE()"
-)->fetchColumn();
-
-$keluarHariIni = $pdo->query(
-    "SELECT COALESCE(SUM(jumlah_keluar), 0) FROM transaksi_keluar WHERE tanggal_keluar = CURDATE()"
-)->fetchColumn();
-
-$produkStokRendah = $pdo->query(
-    'SELECT p.nama_produk, p.stok, k.nama_kategori
-     FROM produk p JOIN kategori k ON p.id_kategori = k.id_kategori
-     WHERE p.stok <= 5 ORDER BY p.stok ASC LIMIT 5'
-)->fetchAll();
+$totalProduk      = hitungTotalProduk($pdo);
+$totalKategori    = hitungTotalKategori($pdo);
+$totalUsers       = hitungTotalUser($pdo);
+$stokRendah       = hitungProdukStokRendah($pdo);
+$masukHariIni     = hitungBarangMasukHariIni($pdo);
+$keluarHariIni    = hitungBarangKeluarHariIni($pdo);
+$produkStokRendah = getProdukStokRendah($pdo);
 
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/sidebar.php';

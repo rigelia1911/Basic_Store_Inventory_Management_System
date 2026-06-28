@@ -2,18 +2,15 @@
 $pageTitle = 'Daftar Produk';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../auth/cek_login.php';
-require_once __DIR__ . '/../includes/upload_produk.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 if ($_SESSION['role'] === 'admin') {
-    header('Location: ' . getBaseUrl() . '/admin/produk/index.php');
+    header('Location: /inventaris-toko/admin/produk/index.php');
     exit;
 }
 
-$produk = $pdo->query(
-    'SELECT p.*, k.nama_kategori FROM produk p
-     JOIN kategori k ON p.id_kategori = k.id_kategori
-     ORDER BY p.nama_produk'
-)->fetchAll();
+$keyword = trim($_GET['cari'] ?? '');
+$produk  = cariProduk($pdo, $keyword);
 
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/sidebar.php';
@@ -24,6 +21,15 @@ require_once __DIR__ . '/../includes/sidebar.php';
         <div class="page-header">
             <h1>Daftar Produk</h1>
         </div>
+
+        <form method="GET" class="card" style="margin-bottom:1rem;padding:1rem;display:flex;gap:0.5rem;align-items:center;">
+            <input type="text" name="cari" class="form-control" placeholder="Cari nama, kode, atau kategori..."
+                   value="<?= htmlspecialchars($keyword) ?>" style="max-width:320px;">
+            <button type="submit" class="btn btn-secondary">Cari</button>
+            <?php if ($keyword !== ''): ?>
+                <a href="produk.php" class="btn btn-secondary">Reset</a>
+            <?php endif; ?>
+        </form>
 
         <div class="table-wrapper">
             <?php if ($produk): ?>
@@ -66,7 +72,7 @@ require_once __DIR__ . '/../includes/sidebar.php';
                 </tbody>
             </table>
             <?php else: ?>
-            <div class="empty-state">Belum ada data produk.</div>
+            <div class="empty-state"><?= $keyword !== '' ? 'Produk tidak ditemukan.' : 'Belum ada data produk.' ?></div>
             <?php endif; ?>
         </div>
     </div>

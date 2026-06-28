@@ -18,7 +18,7 @@ require_once __DIR__ . '/../../includes/sidebar.php';
         <?php flashMessage(); ?>
 
         <div class="card" style="max-width:500px;">
-            <form method="POST" action="<?= getBaseUrl() ?>/process/kategori/tambah.php">
+            <form method="POST" action="/inventaris-toko/process/kategori/tambah.php">
                 <div class="form-group">
                     <label for="nama_kategori">Nama Kategori</label>
                     <input type="text" id="nama_kategori" name="nama_kategori" class="form-control" autofocus>

@@ -18,7 +18,7 @@ require_once __DIR__ . '/../../includes/sidebar.php';
         <?php flashMessage(); ?>
 
         <div class="card" style="max-width:500px;">
-            <form method="POST" action="<?= getBaseUrl() ?>/process/users/tambah.php">
+            <form method="POST" action="/inventaris-toko/process/users/tambah.php">
                 <div class="form-group">
                     <label for="nama">Nama Lengkap</label>
                     <input type="text" id="nama" name="nama" class="form-control" autofocus>

@@ -1,26 +1,17 @@
 <?php
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../auth/cek_login.php';
-require_once __DIR__ . '/../../includes/validasi.php';
+require_once __DIR__ . '/../../includes/functions.php';
 requireAdmin();
 
-$nama_kategori = trim($_POST['nama_kategori'] ?? '');
+$result = tambahKategori($pdo, $_POST);
 
-if ($nama_kategori === '') {
-    $_SESSION['flash_error'] = 'Nama kategori wajib diisi.';
-    header('Location: ' . getBaseUrl() . '/admin/kategori/tambah.php');
+if (!$result['success']) {
+    $_SESSION['flash_error'] = $result['error'];
+    header('Location: /inventaris-toko/admin/kategori/tambah.php');
     exit;
 }
 
-if (strlen($nama_kategori) < 3 || strlen($nama_kategori) > 100) {
-    $_SESSION['flash_error'] = 'Nama kategori minimal 3 karakter dan maksimal 100 karakter.';
-    header('Location: ' . getBaseUrl() . '/admin/kategori/tambah.php');
-    exit;
-}
-
-$stmt = $pdo->prepare('INSERT INTO kategori (nama_kategori) VALUES (?)');
-$stmt->execute([$nama_kategori]);
-
-$_SESSION['flash_success'] = 'Kategori berhasil ditambahkan.';
-header('Location: ' . getBaseUrl() . '/admin/kategori/index.php');
+$_SESSION['flash_success'] = $result['message'];
+header('Location: /inventaris-toko/admin/kategori/index.php');
 exit;

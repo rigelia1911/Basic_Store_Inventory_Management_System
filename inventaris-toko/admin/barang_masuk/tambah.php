@@ -2,9 +2,10 @@
 $pageTitle = 'Catat Barang Masuk';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../auth/cek_login.php';
+require_once __DIR__ . '/../../includes/functions.php';
 requireAdmin();
 
-$produk = $pdo->query('SELECT id_produk, nama_produk, kode_produk, stok FROM produk ORDER BY nama_produk')->fetchAll();
+$produk = getProdukUntukTransaksi($pdo);
 
 require_once __DIR__ . '/../../includes/header.php';
 require_once __DIR__ . '/../../includes/sidebar.php';
@@ -23,7 +24,7 @@ require_once __DIR__ . '/../../includes/sidebar.php';
             <?php if (!$produk): ?>
                 <div class="alert alert-warning">Tambahkan produk terlebih dahulu.</div>
             <?php else: ?>
-            <form method="POST" action="<?= getBaseUrl() ?>/process/barang_masuk/tambah.php">
+            <form method="POST" action="/inventaris-toko/process/barang_masuk/tambah.php">
                 <div class="form-group">
                     <label for="id_produk">Produk</label>
                     <select id="id_produk" name="id_produk" class="form-control">

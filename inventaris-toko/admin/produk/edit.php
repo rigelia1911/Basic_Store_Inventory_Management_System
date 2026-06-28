@@ -2,13 +2,11 @@
 $pageTitle = 'Edit Produk';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../auth/cek_login.php';
-require_once __DIR__ . '/../../includes/upload_produk.php';
+require_once __DIR__ . '/../../includes/functions.php';
 requireAdmin();
 
 $id = (int) ($_GET['id'] ?? 0);
-$stmt = $pdo->prepare('SELECT * FROM produk WHERE id_produk = ?');
-$stmt->execute([$id]);
-$produk = $stmt->fetch();
+$produk = getProdukById($pdo, $id);
 
 if (!$produk) {
     $_SESSION['flash_error'] = 'Produk tidak ditemukan.';
@@ -16,7 +14,7 @@ if (!$produk) {
     exit;
 }
 
-$kategori = $pdo->query('SELECT * FROM kategori ORDER BY nama_kategori')->fetchAll();
+$kategori = getAllKategori($pdo);
 
 require_once __DIR__ . '/../../includes/header.php';
 require_once __DIR__ . '/../../includes/sidebar.php';
@@ -32,7 +30,7 @@ require_once __DIR__ . '/../../includes/sidebar.php';
         <?php flashMessage(); ?>
 
         <div class="card" style="max-width:600px;">
-            <form method="POST" action="<?= getBaseUrl() ?>/process/produk/edit.php" enctype="multipart/form-data">
+            <form method="POST" action="/inventaris-toko/process/produk/edit.php" enctype="multipart/form-data">
                 <input type="hidden" name="id_produk" value="<?= $produk['id_produk'] ?>">
                 <div class="form-group">
                     <label for="id_kategori">Kategori</label>

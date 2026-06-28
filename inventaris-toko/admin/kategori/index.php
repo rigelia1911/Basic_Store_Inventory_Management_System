@@ -2,11 +2,11 @@
 $pageTitle = 'Kategori';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../auth/cek_login.php';
+require_once __DIR__ . '/../../includes/functions.php';
 requireAdmin();
 
-$kategori = $pdo->query('SELECT k.*, COUNT(p.id_produk) AS jumlah_produk
-    FROM kategori k LEFT JOIN produk p ON k.id_kategori = p.id_kategori
-    GROUP BY k.id_kategori ORDER BY k.nama_kategori')->fetchAll();
+$keyword  = trim($_GET['cari'] ?? '');
+$kategori = cariKategori($pdo, $keyword);
 
 require_once __DIR__ . '/../../includes/header.php';
 require_once __DIR__ . '/../../includes/sidebar.php';
@@ -20,6 +20,15 @@ require_once __DIR__ . '/../../includes/sidebar.php';
             <h1>Data Kategori</h1>
             <a href="tambah.php" class="btn btn-primary">+ Tambah Kategori</a>
         </div>
+
+        <form method="GET" class="card" style="margin-bottom:1rem;padding:1rem;display:flex;gap:0.5rem;align-items:center;">
+            <input type="text" name="cari" class="form-control" placeholder="Cari nama kategori..."
+                   value="<?= htmlspecialchars($keyword) ?>" style="max-width:320px;">
+            <button type="submit" class="btn btn-secondary">Cari</button>
+            <?php if ($keyword !== ''): ?>
+                <a href="index.php" class="btn btn-secondary">Reset</a>
+            <?php endif; ?>
+        </form>
 
         <div class="table-wrapper">
             <?php if ($kategori): ?>
@@ -48,7 +57,7 @@ require_once __DIR__ . '/../../includes/sidebar.php';
                 </tbody>
             </table>
             <?php else: ?>
-            <div class="empty-state">Belum ada data kategori.</div>
+            <div class="empty-state"><?= $keyword !== '' ? 'Kategori tidak ditemukan.' : 'Belum ada data kategori.' ?></div>
             <?php endif; ?>
         </div>
     </div>

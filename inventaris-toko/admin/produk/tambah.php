@@ -2,10 +2,10 @@
 $pageTitle = 'Tambah Produk';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../auth/cek_login.php';
-require_once __DIR__ . '/../../includes/upload_produk.php';
+require_once __DIR__ . '/../../includes/functions.php';
 requireAdmin();
 
-$kategori = $pdo->query('SELECT * FROM kategori ORDER BY nama_kategori')->fetchAll();
+$kategori = getAllKategori($pdo);
 
 require_once __DIR__ . '/../../includes/header.php';
 require_once __DIR__ . '/../../includes/sidebar.php';
@@ -24,7 +24,7 @@ require_once __DIR__ . '/../../includes/sidebar.php';
             <?php if (!$kategori): ?>
                 <div class="alert alert-warning">Tambahkan kategori terlebih dahulu sebelum menambah produk.</div>
             <?php else: ?>
-            <form method="POST" action="<?= getBaseUrl() ?>/process/produk/tambah.php" enctype="multipart/form-data">
+            <form method="POST" action="/inventaris-toko/process/produk/tambah.php" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="id_kategori">Kategori</label>
                     <select id="id_kategori" name="id_kategori" class="form-control">

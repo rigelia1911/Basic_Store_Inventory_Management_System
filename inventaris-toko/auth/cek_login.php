@@ -4,40 +4,21 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 if (!isset($_SESSION['id_user'])) {
-    header('Location: ' . getBaseUrl() . '/auth/login.php');
+    header('Location: /inventaris-toko/auth/login.php');
     exit;
-}
-
-function getBaseUrl(): string
-{
-    $script = $_SERVER['SCRIPT_NAME'];
-    $pos = strpos($script, '/auth/');
-    if ($pos === false) {
-        $pos = strpos($script, '/admin/');
-    }
-    if ($pos === false) {
-        $pos = strpos($script, '/user/');
-    }
-    if ($pos === false) {
-        $pos = strpos($script, '/process/');
-    }
-    if ($pos !== false) {
-        return substr($script, 0, $pos);
-    }
-    return '';
 }
 
 function requireAdmin(): void
 {
     if ($_SESSION['role'] !== 'admin') {
-        header('Location: ' . getBaseUrl() . '/user/index.php');
+        header('Location: /inventaris-toko/user/index.php');
         exit;
     }
 }
 
 function assetUrl(string $path): string
 {
-    return getBaseUrl() . '/assets/' . ltrim($path, '/');
+    return '/inventaris-toko/assets/' . ltrim($path, '/');
 }
 
 function formatRupiah(float|int|string $angka): string

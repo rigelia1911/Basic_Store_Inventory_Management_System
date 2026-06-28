@@ -5,6 +5,6 @@
     <div class="navbar-user">
         Halo, <strong><?= htmlspecialchars($_SESSION['nama']) ?></strong>
         &nbsp;|&nbsp;
-        <a href="<?= getBaseUrl() ?>/auth/logout.php">Keluar</a>
+        <a href="/inventaris-toko/auth/logout.php">Keluar</a>
     </div>
 </header>
