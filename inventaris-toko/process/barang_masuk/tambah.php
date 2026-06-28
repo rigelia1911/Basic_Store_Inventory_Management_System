@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../auth/cek_login.php';
+require_once __DIR__ . '/../../includes/validasi.php';
 
 $id_produk     = (int) ($_POST['id_produk'] ?? 0);
 $tanggal_masuk = $_POST['tanggal_masuk'] ?? '';
